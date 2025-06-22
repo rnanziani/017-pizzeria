@@ -3,7 +3,7 @@ import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 const Navbar = () => {
   const pizzeriaName = 'Pizzeria Mamma Mia!'
   const total = 25000
-  const token = false // Simulación de token de autenticación
+  const token = true // Simulación de token de autenticación
 
   return (
     <NavbarBs bg='dark' variant='dark' expand='lg' className='mb-4'>
@@ -11,7 +11,7 @@ const Navbar = () => {
         <NavbarBs.Brand href='#home'>{pizzeriaName}</NavbarBs.Brand>
         <NavbarBs.Toggle aria-controls='basic-navbar-nav' />
         <NavbarBs.Collapse id='basic-navbar-nav'>
-          <Nav className='ms-auto'>
+          <Nav className='me-auto'>
             <Button variant='outline-light' className='me-2'>🍕 Home</Button>
             {token
               ? (
@@ -26,6 +26,8 @@ const Navbar = () => {
                   <Button variant='outline-light' className='me-2'>🔐 Register</Button>
                 </>
                 )}
+          </Nav>
+          <Nav>
             <Button variant='light'>
               🛒 Total: ${total.toLocaleString('es-CL')}
             </Button>
