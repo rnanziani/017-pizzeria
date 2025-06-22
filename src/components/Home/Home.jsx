@@ -23,7 +23,7 @@ const Home = () => {
     {
       name: 'Pepperoni',
       price: 6950,
-      ingredients: ['mozzarella', 'pepperoni', 'orégano'],
+      ingredients: ['mozzarella', 'pepperoni', 'orégano', 'cebolla'],
       img: pizza3
     }
   ]

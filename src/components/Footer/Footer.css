@@ -1,0 +1,11 @@
+.footer-main {
+  background-color: #212529; /* Un color oscuro similar al de la imagen */
+  color: white;
+  text-align: center;
+  padding: 1rem 0;
+  margin-top: 2rem;
+}
+
+.footer-main p {
+  margin: 0;
+} 
