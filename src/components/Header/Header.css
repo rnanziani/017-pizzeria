@@ -1,0 +1,24 @@
+.header {
+  background-color: rgba(0, 0, 0, 0.5); /* Gradiente semitransparente */
+  background-blend-mode: overlay; /* Mezcla de colores */
+  background-image: url('/src/assets/img/Header.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.header-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.header-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.header-description {
+  font-size: 18px;
+  color: #ccc;
+}
