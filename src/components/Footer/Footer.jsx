@@ -3,7 +3,7 @@ import './Footer.css'
 const Footer = () => {
   return (
     <footer className='footer-main'>
-      <p>© 2021 - Pizzeria Mamma Mia! - Todos los derechos reservados</p>
+      <p>© 2025 - Pizzeria Mamma Mia! - Todos los derechos reservados</p>
     </footer>
   )
 }
