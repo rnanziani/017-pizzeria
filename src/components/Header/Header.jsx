@@ -1,17 +1,23 @@
-
-import 'Header/Header.css'
-
-import headerImage from '../assets/img/Header.jpg'; // Importar la imagen
+import headerImage from '../../assets/img/Header.jpg' // Corregir la ruta de la imagen
+import './Header.css'
 
 const Header = () => {
+  const headerStyle = {
+    backgroundImage: `url(${headerImage})`
+  }
+
   return (
-    <header className="header" style={{ backgroundImage: `url(${headerImage})` }}>
-      <div className="header-content">
-        <h1 className="header-title">¡Pizzería Mamma Mia!</h1>
-        <p className="header-description">Tenemos las mejores pizzas que podrás encontrar.</p>
+    <header
+      className='header-main'
+      style={headerStyle}
+    >
+      <div className='header-content'>
+        <h1>¡Pizzería Mamma Mia!</h1>
+        <p>Tenemos las mejores pizzas que podrás encontrar.</p>
+        <hr />
       </div>
     </header>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header
