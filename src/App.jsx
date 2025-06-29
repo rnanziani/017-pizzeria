@@ -12,9 +12,8 @@ function App () {
       {/* <Home /> */}
       <Register />
       <Login />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }
-
 export default App
