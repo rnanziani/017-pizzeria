@@ -1,8 +1,7 @@
 import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 
-const Navbar = () => {
+const Navbar = ({ total }) => {
   const pizzeriaName = 'Pizzeria Mamma Mia!'
-  const total = 25000
   const token = true // Simulación de token de autenticación
 
   return (

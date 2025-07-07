@@ -1,11 +1,7 @@
-import { useState } from 'react';
-import { pizzaCart } from '../../data/pizzas';
-import './Cart.css';
 import Swal from 'sweetalert2';
+import './Cart.css';
 
-const Cart = () => {
-  const [cart, setCart] = useState(pizzaCart);
-
+const Cart = ({ cart, setCart }) => {
   const handleAdd = (id) => {
     setCart(prevCart =>
       prevCart.map(p =>
@@ -19,11 +15,11 @@ const Cart = () => {
   const handleRemove = (id) => {
     setCart(prevCart => {
       const pizza = prevCart.find(p => p.id === id);
-      if (pizza.quantity === 1) {
+      if (pizza.quantity === 0) {
         Swal.fire({
           icon: 'warning',
           title: 'Atención',
-          text: 'No se puede disminuir más. Si quieres eliminar la pizza, hazlo desde el carrito.'
+          text: 'No se puede disminuir más. La cantidad ya es cero.'
         });
         return prevCart;
       }
@@ -33,7 +29,7 @@ const Cart = () => {
     });
   };
 
-  const total = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+  const total = cart.reduce((sum, p) => sum + p.price * Math.max(0, p.quantity), 0);
 
   return (
     <main className="cart-main">
@@ -64,9 +60,12 @@ const Cart = () => {
           </div>
         ))}
       </div>
-      <div className="cart-total">
-        <span>Total:</span>
-        <span>${total.toLocaleString('es-CL')}</span>
+      <div className="cart-total-row">
+        <div className="cart-total-label">
+          <span>Total:</span>
+          <span>${total.toLocaleString('es-CL')}</span>
+        </div>
+        <button className="cart-pay-btn-blue">Pagar</button>
       </div>
     </main>
   );

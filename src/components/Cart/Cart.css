@@ -103,4 +103,32 @@
 }
 .cart-pay-btn:hover {
   background: #444;
+}
+
+.cart-total-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.cart-total-label {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.cart-pay-btn-blue {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 2rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+.cart-pay-btn-blue:hover {
+  background: #084298;
 } 
