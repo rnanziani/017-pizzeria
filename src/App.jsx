@@ -1,4 +1,5 @@
 import './App.css'
+import Cart from './components/Cart/Cart'
 import Footer from './components/Footer/Footer'
 import Home from './components/Home/Home'
 import Navbar from './components/Navbar/Navbar'
@@ -11,8 +12,10 @@ function App () {
       <Navbar />
       {/* <Home /> */}
       {/* <Register /> */}
-      <Login />
-      {/* <Footer /> */}
+      {/* <Login /> */}
+      <Cart />
+      <Footer />
+
     </div>
   )
 }
