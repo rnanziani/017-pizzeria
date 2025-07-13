@@ -7,6 +7,7 @@ import Home from './components/Home/Home'
 import Navbar from './components/Navbar/Navbar'
 import Register from './components/Register/Register'
 import Login from './components/Login/Login'
+import Pizza from './components/Pizza/Pizza'
 
 function App () {
   const [cart, setCart] = useState(pizzaCart);
@@ -18,7 +19,8 @@ function App () {
       {/* <Home /> */}
       {/* <Register /> */}
       {/* <Login /> */}
-      <Cart cart={cart} setCart={setCart} />
+      {/* <Cart cart={cart} setCart={setCart} /> */}
+      <Pizza />
       <Footer />
 
     </div>

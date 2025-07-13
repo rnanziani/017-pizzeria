@@ -1,6 +1,6 @@
 import { Button, Card, Col, ListGroup } from 'react-bootstrap'
 
-const CardPizza = ({ name, price, ingredients, img }) => {
+const CardPizza = ({ id, name, price, ingredients, img, desc }) => {
   const formatPrice = (value) => {
     return value.toLocaleString('es-CL')
   }
