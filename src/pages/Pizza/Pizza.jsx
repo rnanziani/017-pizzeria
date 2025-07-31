@@ -54,7 +54,7 @@ const Pizza = () => {
         <Alert variant="danger">
           <Alert.Heading>Error al cargar la pizza</Alert.Heading>
           <p>{error}</p>
-          <p>Asegúrate de que el backend esté ejecutándose en http://localhost:5000</p>
+          <p>Asegúrate de que el backend esté ejecutándose en http://localhost:5001</p>
         </Alert>
       </Container>
     )

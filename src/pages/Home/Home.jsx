@@ -56,7 +56,7 @@ const Home = () => {
             <div className="alert alert-danger" role="alert">
               <h4>Error al cargar las pizzas</h4>
               <p>{error}</p>
-              <p>Asegúrate de que el backend esté ejecutándose en http://localhost:5000</p>
+              <p>Asegúrate de que el backend esté ejecutándose en http://localhost:5001</p>
             </div>
           </div>
         </Container>
