@@ -90,7 +90,7 @@ Este proyecto implementa un sistema completo de carrito de compras utilizando **
    - Mismo total en Navbar y Cart
    - Cálculo automático en tiempo real
 
-6. **Context para pizzas (opcional)** ✅
+6. **Context para pizzas ** ✅
    - PizzaContext implementado
    - Centralización de llamadas API
 
