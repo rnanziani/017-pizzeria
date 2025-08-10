@@ -1,35 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import CardPizza from '../../components/CardPizza/CardPizza'
 import Header from '../../components/Header/Header'
+import { usePizza } from '../../contexts/PizzaContext'
 
 const Home = () => {
-  const [pizzas, setPizzas] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    const fetchPizzas = async () => {
-      try {
-        setLoading(true)
-        const response = await fetch('http://localhost:5001/api/pizzas')
-        
-        if (!response.ok) {
-          throw new Error('Error al obtener las pizzas')
-        }
-        
-        const data = await response.json()
-        setPizzas(data)
-      } catch (error) {
-        console.error('Error fetching pizzas:', error)
-        setError(error.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    fetchPizzas()
-  }, [])
+  const { pizzas, loading, error } = usePizza()
 
   if (loading) {
     return (

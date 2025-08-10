@@ -1,24 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, ListGroup, Button, Alert } from 'react-bootstrap'
+import { usePizza } from '../../contexts/PizzaContext'
+import { useCart } from '../../contexts/CartContext'
 import './Pizza.css'
 
 const Pizza = () => {
   const [pizza, setPizza] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { getPizzaById } = usePizza()
+  const { addToCart, getItemQuantity } = useCart()
 
   useEffect(() => {
     const fetchPizza = async () => {
       try {
         setLoading(true)
         // Por ahora usamos un ID fijo como p001, en el siguiente hito será dinámico
-        const response = await fetch('http://localhost:5001/api/pizzas/p001')
-        
-        if (!response.ok) {
-          throw new Error('Error al obtener la pizza')
-        }
-        
-        const data = await response.json()
+        const data = await getPizzaById('p001')
         setPizza(data)
       } catch (error) {
         console.error('Error fetching pizza:', error)
@@ -29,11 +27,19 @@ const Pizza = () => {
     }
 
     fetchPizza()
-  }, [])
+  }, [getPizzaById])
 
   const formatPrice = (value) => {
     return value.toLocaleString('es-CL')
   }
+
+  const handleAddToCart = () => {
+    if (pizza) {
+      addToCart(pizza)
+    }
+  }
+
+  const quantityInCart = pizza ? getItemQuantity(pizza.id) : 0
 
   if (loading) {
     return (
@@ -93,6 +99,14 @@ const Pizza = () => {
                 $ {formatPrice(pizza.price)}
               </Card.Text>
               
+              {quantityInCart > 0 && (
+                <div className="text-center mb-3">
+                  <small className="text-muted">
+                    En carrito: {quantityInCart}
+                  </small>
+                </div>
+              )}
+              
               <hr />
               
               <Card.Text className="h5 mb-3">Ingredientes:</Card.Text>
@@ -115,7 +129,12 @@ const Pizza = () => {
               <hr />
               
               <div className="d-grid gap-2">
-                <Button variant="danger" size="lg" className="add-to-cart-btn">
+                <Button 
+                  variant="danger" 
+                  size="lg" 
+                  className="add-to-cart-btn"
+                  onClick={handleAddToCart}
+                >
                   Añadir al Carrito 🛒
                 </Button>
                 <Button variant="outline-secondary" size="sm" className="back-btn">

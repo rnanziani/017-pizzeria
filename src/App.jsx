@@ -1,7 +1,9 @@
 import './App.css'
-import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { pizzaCart } from './data/pizzas';
+
+// Contexts
+import { CartProvider } from './contexts/CartContext';
+import { PizzaProvider } from './contexts/PizzaContext';
 
 // Componentes de páginas
 import Home from './pages/Home/Home'
@@ -17,26 +19,27 @@ import Footer from './components/Footer/Footer'
 import Navbar from './components/Navbar/Navbar'
 
 function App () {
-  const [cart, setCart] = useState(pizzaCart);
-  const total = cart.reduce((sum, p) => sum + p.price * Math.max(0, p.quantity), 0);
-
   return (
-    <Router>
-      <div>
-        <Navbar total={total} />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/cart" element={<Cart cart={cart} setCart={setCart} />} />
-          <Route path="/pizza/p001" element={<Pizza />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/404" element={<NotFound />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <PizzaProvider>
+      <CartProvider>
+        <Router>
+          <div>
+            <Navbar />
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/pizza/p001" element={<Pizza />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/404" element={<NotFound />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+          </div>
+        </Router>
+      </CartProvider>
+    </PizzaProvider>
   )
 }
 

@@ -1,9 +1,11 @@
 import { Button, Container, Nav, Navbar as NavbarBs } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
+import { useCart } from '../../contexts/CartContext'
 
-const Navbar = ({ total }) => {
+const Navbar = () => {
   const pizzeriaName = 'Pizzeria Mamma Mia!'
   const token = true // Simulación de token de autenticación
+  const { total, getCartItemCount } = useCart()
 
   return (
     <NavbarBs bg='dark' variant='dark' expand='lg' className='mb-4'>
@@ -39,7 +41,7 @@ const Navbar = ({ total }) => {
           </Nav>
           <Nav>
             <Button as={Link} to='/cart' variant='light'>
-              🛒 Total: ${total.toLocaleString('es-CL')}
+              🛒 Total: ${total.toLocaleString('es-CL')} ({getCartItemCount()})
             </Button>
           </Nav>
         </NavbarBs.Collapse>
