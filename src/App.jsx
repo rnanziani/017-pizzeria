@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 // Contexts
 import { CartProvider } from './contexts/CartContext';
 import { PizzaProvider } from './contexts/PizzaContext';
+import { UserProvider } from './contexts/UserContext';
 
 // Componentes de páginas
 import Home from './pages/Home/Home'
@@ -17,29 +18,51 @@ import NotFound from './pages/NotFound/NotFound'
 // Componentes de layout
 import Footer from './components/Footer/Footer'
 import Navbar from './components/Navbar/Navbar'
+import { ProtectedRoute, PublicRoute } from './components/ProtectedRoute/ProtectedRoute'
 
 function App () {
   return (
-    <PizzaProvider>
-      <CartProvider>
-        <Router>
+    <UserProvider>
+      <PizzaProvider>
+        <CartProvider>
+          <Router>
           <div>
             <Navbar />
             <Routes>
+              {/* 🎯 Rutas públicas - accesibles para todos */}
               <Route path="/" element={<Home />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/login" element={<Login />} />
               <Route path="/cart" element={<Cart />} />
-              <Route path="/pizza/p001" element={<Pizza />} />
-              <Route path="/profile" element={<Profile />} />
+              <Route path="/pizza/:id" element={<Pizza />} />
               <Route path="/404" element={<NotFound />} />
+              
+              {/* 🎯 Rutas públicas - solo para no autenticados */}
+              <Route path="/register" element={
+                <PublicRoute>
+                  <Register />
+                </PublicRoute>
+              } />
+              <Route path="/login" element={
+                <PublicRoute>
+                  <Login />
+                </PublicRoute>
+              } />
+              
+              {/* 🎯 Rutas protegidas - solo para autenticados */}
+              <Route path="/profile" element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              } />
+              
+              {/* 🎯 Ruta catch-all */}
               <Route path="*" element={<NotFound />} />
             </Routes>
             <Footer />
           </div>
-        </Router>
-      </CartProvider>
-    </PizzaProvider>
+          </Router>
+        </CartProvider>
+      </PizzaProvider>
+    </UserProvider>
   )
 }
 

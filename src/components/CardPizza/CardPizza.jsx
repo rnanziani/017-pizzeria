@@ -1,4 +1,5 @@
 import { Button, Card, Col, ListGroup } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
 import { useCart } from '../../contexts/CartContext'
 
 const CardPizza = ({ id, name, price, ingredients, img, desc }) => {
@@ -50,7 +51,14 @@ const CardPizza = ({ id, name, price, ingredients, img, desc }) => {
             </div>
           )}
           <div className='d-flex justify-content-around'>
-            <Button variant='info' size='sm'>Ver Más 👀</Button>
+            <Button 
+              as={Link} 
+              to={`/pizza/${id}`}
+              variant='info' 
+              size='sm'
+            >
+              Ver Más 👀
+            </Button>
             <Button 
               variant='danger' 
               size='sm'

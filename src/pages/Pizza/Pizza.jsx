@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, ListGroup, Button, Alert } from 'react-bootstrap'
+import { useParams } from 'react-router-dom'
 import { usePizza } from '../../contexts/PizzaContext'
 import { useCart } from '../../contexts/CartContext'
 import './Pizza.css'
@@ -8,6 +9,7 @@ const Pizza = () => {
   const [pizza, setPizza] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { id } = useParams() // 🎯 Extraemos el ID de la URL
   const { getPizzaById } = usePizza()
   const { addToCart, getItemQuantity } = useCart()
 
@@ -15,8 +17,8 @@ const Pizza = () => {
     const fetchPizza = async () => {
       try {
         setLoading(true)
-        // Por ahora usamos un ID fijo como p001, en el siguiente hito será dinámico
-        const data = await getPizzaById('p001')
+        // 🎯 Ahora usamos el ID dinámico de la URL
+        const data = await getPizzaById(id)
         setPizza(data)
       } catch (error) {
         console.error('Error fetching pizza:', error)
@@ -27,7 +29,7 @@ const Pizza = () => {
     }
 
     fetchPizza()
-  }, [getPizzaById])
+  }, [getPizzaById, id]) // 🎯 Agregamos 'id' como dependencia
 
   const formatPrice = (value) => {
     return value.toLocaleString('es-CL')

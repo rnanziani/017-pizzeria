@@ -1,9 +1,13 @@
 import Swal from 'sweetalert2';
 import './Cart.css';
 import { useCart } from '../../contexts/CartContext';
+import { useUser } from '../../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Cart = () => {
   const { items, total, addToCart, removeFromCart, clearCart } = useCart();
+  const { token } = useUser(); // 🎯 Obtenemos el estado de autenticación
+  const navigate = useNavigate(); // 🎯 Para redireccionar al home después del pago
 
   const handleAdd = (pizza) => {
     addToCart(pizza);
@@ -41,6 +45,34 @@ const Cart = () => {
       if (result.isConfirmed) {
         clearCart();
       }
+    });
+  };
+
+  // 🎯 Nueva función para manejar el pago
+  const handlePayment = () => {
+    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    
+    Swal.fire({
+      icon: 'success',
+      title: '¡Pago Exitoso! 🎉',
+      html: `
+        <div style="text-align: center;">
+          <p><strong>Tu pedido ha sido procesado correctamente</strong></p>
+          <p>📦 Cantidad de items: <strong>${itemCount}</strong></p>
+          <p>💰 Total pagado: <strong>$${total.toLocaleString('es-CL')}</strong></p>
+          <p>🚚 Tu pedido llegará en 30-45 minutos</p>
+          <p>¡Gracias por elegir Pizzeria Mamma Mia!</p>
+        </div>
+      `,
+      confirmButtonText: 'Continuar comprando',
+      confirmButtonColor: '#28a745',
+      timer: 5000,
+      timerProgressBar: true
+    }).then(() => {
+      // 🎯 Vaciar el carrito después del pago exitoso
+      clearCart();
+      // 🎯 Redireccionar al home
+      navigate('/');
     });
   };
 
@@ -100,7 +132,18 @@ const Cart = () => {
           <span>Total:</span>
           <span>${total.toLocaleString('es-CL')}</span>
         </div>
-        <button className="cart-pay-btn-blue">Pagar</button>
+        <button 
+          className="cart-pay-btn-blue"
+          disabled={!token}
+          onClick={token ? handlePayment : undefined}
+          style={{
+            opacity: !token ? 0.5 : 1,
+            cursor: !token ? 'not-allowed' : 'pointer'
+          }}
+          title={!token ? 'Debes iniciar sesión para pagar' : 'Procesar pago'}
+        >
+          {!token ? '🔒 Inicia sesión para pagar' : 'Pagar'}
+        </button>
       </div>
     </main>
   );

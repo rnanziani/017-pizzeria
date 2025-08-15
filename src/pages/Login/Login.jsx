@@ -1,10 +1,14 @@
 import React, { useState } from 'react';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import Swal from 'sweetalert2';
+import { useUser } from '../../contexts/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login } = useUser(); // 🎯 Obtenemos la función login del contexto
+  const navigate = useNavigate(); // 🎯 Para redireccionar después del login
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,10 +28,18 @@ const Login = () => {
       });
       return;
     }
+    // 🎯 AQUÍ ESTÁ LA CLAVE: Ejecutar login del contexto
+    login(); // Cambia el token a true
+    
     Swal.fire({
       icon: 'success',
       title: '¡Login exitoso!',
-      text: 'Bienvenido/a.'
+      text: 'Bienvenido/a. Redirigiendo...',
+      timer: 1500,
+      showConfirmButton: false
+    }).then(() => {
+      // 🎯 Redirigir al home después del login exitoso
+      navigate('/');
     });
   };
 
