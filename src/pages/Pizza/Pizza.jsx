@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Container, Row, Col, Card, ListGroup, Button, Alert } from 'react-bootstrap'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { usePizza } from '../../contexts/PizzaContext'
 import { useCart } from '../../contexts/CartContext'
 import './Pizza.css'
@@ -10,6 +10,7 @@ const Pizza = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { id } = useParams() // 🎯 Extraemos el ID de la URL
+  const navigate = useNavigate() // 🎯 Para navegación
   const { getPizzaById } = usePizza()
   const { addToCart, getItemQuantity } = useCart()
 
@@ -39,6 +40,11 @@ const Pizza = () => {
     if (pizza) {
       addToCart(pizza)
     }
+  }
+
+  // 🎯 Función para volver al menú principal
+  const handleBackToMenu = () => {
+    navigate('/')
   }
 
   const quantityInCart = pizza ? getItemQuantity(pizza.id) : 0
@@ -139,8 +145,13 @@ const Pizza = () => {
                 >
                   Añadir al Carrito 🛒
                 </Button>
-                <Button variant="outline-secondary" size="sm" className="back-btn">
-                  Volver al Menú
+                <Button 
+                  variant="outline-secondary" 
+                  size="sm" 
+                  className="back-btn"
+                  onClick={handleBackToMenu}
+                >
+                  🏠 Volver al Menú
                 </Button>
               </div>
             </Card.Body>

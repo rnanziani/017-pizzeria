@@ -48,6 +48,11 @@ const Cart = () => {
     });
   };
 
+  // 🎯 Función para redirigir al login cuando no está autenticado
+  const handleLoginRedirect = () => {
+    navigate('/login');
+  };
+
   // 🎯 Nueva función para manejar el pago
   const handlePayment = () => {
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -134,13 +139,12 @@ const Cart = () => {
         </div>
         <button 
           className="cart-pay-btn-blue"
-          disabled={!token}
-          onClick={token ? handlePayment : undefined}
+          onClick={token ? handlePayment : handleLoginRedirect}
           style={{
-            opacity: !token ? 0.5 : 1,
-            cursor: !token ? 'not-allowed' : 'pointer'
+            opacity: !token ? 0.8 : 1,
+            cursor: 'pointer'
           }}
-          title={!token ? 'Debes iniciar sesión para pagar' : 'Procesar pago'}
+          title={!token ? 'Haz clic para iniciar sesión' : 'Procesar pago'}
         >
           {!token ? '🔒 Inicia sesión para pagar' : 'Pagar'}
         </button>
