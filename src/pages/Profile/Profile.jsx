@@ -1,17 +1,42 @@
 import React from 'react'
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useUser } from '../../contexts/UserContext'
+import Swal from 'sweetalert2'
 import './Profile.css'
 
 const Profile = () => {
-  // Datos estáticos del usuario (en el futuro vendrán de la autenticación)
-  const userEmail = 'usuario@ejemplo.com'
-  const userName = 'Usuario Ejemplo'
-  const joinDate = 'Enero 2024'
+  const { userEmail, userProfile, logout, loading } = useUser()
+  const navigate = useNavigate()
 
+  // 🎯 Función para manejar el logout
   const handleLogout = () => {
-    // Por ahora solo muestra un alert, en el futuro manejará la autenticación
-    alert('Función de cerrar sesión - Se implementará en el siguiente hito')
+    Swal.fire({
+      icon: 'question',
+      title: '¿Cerrar sesión?',
+      text: '¿Estás seguro de que quieres cerrar tu sesión?',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        logout() // 🎯 Llamar al método logout del contexto
+        navigate('/') // 🎯 Redirigir al home
+        Swal.fire({
+          icon: 'success',
+          title: 'Sesión cerrada',
+          text: 'Has cerrado sesión correctamente.',
+          timer: 1500,
+          showConfirmButton: false
+        })
+      }
+    })
+  }
+
+  // 🎯 Si no hay usuario autenticado, redirigir al login
+  if (!userEmail) {
+    navigate('/login')
+    return null
   }
 
   return (
@@ -25,7 +50,7 @@ const Profile = () => {
               </div>
               
               <Card.Title className="profile-title">
-                {userName}
+                {userProfile?.name || 'Usuario'}
               </Card.Title>
               
               <Card.Text className="profile-email">
@@ -33,7 +58,10 @@ const Profile = () => {
               </Card.Text>
               
               <Badge bg="info" className="profile-badge">
-                Miembro desde {joinDate}
+                Miembro desde {userProfile?.createdAt ? new Date(userProfile.createdAt).toLocaleDateString('es-ES', { 
+                  year: 'numeric', 
+                  month: 'long' 
+                }) : 'Recientemente'}
               </Badge>
               
               <hr className="profile-divider" />
@@ -42,17 +70,17 @@ const Profile = () => {
                 <div className="stat-item">
                   <h4>🍕</h4>
                   <p>Pizzas Pedidas</p>
-                  <span className="stat-number">12</span>
+                  <span className="stat-number">{userProfile?.pizzasOrdered || 0}</span>
                 </div>
                 <div className="stat-item">
                   <h4>⭐</h4>
                   <p>Puntos</p>
-                  <span className="stat-number">150</span>
+                  <span className="stat-number">{userProfile?.points || 0}</span>
                 </div>
                 <div className="stat-item">
                   <h4>🎯</h4>
                   <p>Pedidos</p>
-                  <span className="stat-number">8</span>
+                  <span className="stat-number">{userProfile?.ordersCount || 0}</span>
                 </div>
               </div>
               
@@ -69,8 +97,9 @@ const Profile = () => {
                   variant="danger" 
                   className="action-btn logout-btn"
                   onClick={handleLogout}
+                  disabled={loading}
                 >
-                  🚪 Cerrar Sesión
+                  {loading ? 'Cerrando sesión...' : '🚪 Cerrar Sesión'}
                 </Button>
               </div>
             </Card.Body>

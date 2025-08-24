@@ -5,7 +5,7 @@ import { useUser } from '../../contexts/UserContext'
 
 const Navbar = () => {
   const pizzeriaName = 'Pizzeria Mamma Mia!'
-  const { token, logout } = useUser() // 🎯 Usamos el contexto real
+  const { isAuthenticated, logout } = useUser() // 🎯 Usamos el contexto real
   const { total, getCartItemCount } = useCart()
 
   return (
@@ -18,7 +18,7 @@ const Navbar = () => {
             <Button as={Link} to='/' variant='outline-light' className='me-2'>
               🍕 Home
             </Button>
-            {token
+            {isAuthenticated
               ? (
                 <>
                   <Button as={Link} to='/profile' variant='outline-light' className='me-2'>

@@ -3,10 +3,11 @@ import './Cart.css';
 import { useCart } from '../../contexts/CartContext';
 import { useUser } from '../../contexts/UserContext';
 import { useNavigate } from 'react-router-dom';
+import { buildApiUrl } from '../../config/api';
 
 const Cart = () => {
   const { items, total, addToCart, removeFromCart, clearCart } = useCart();
-  const { token } = useUser(); // 🎯 Obtenemos el estado de autenticación
+  const { isAuthenticated, makeAuthenticatedRequest } = useUser(); // 🎯 Obtenemos el estado de autenticación y el método para hacer peticiones
   const navigate = useNavigate(); // 🎯 Para redireccionar al home después del pago
 
   const handleAdd = (pizza) => {
@@ -53,32 +54,87 @@ const Cart = () => {
     navigate('/login');
   };
 
+  // 🎯 Función para enviar el carrito al backend
+  const sendCartToBackend = async () => {
+    try {
+      // 🎯 Preparar los datos del carrito para enviar al backend
+      const cartData = {
+        items: items.map(item => ({
+          pizzaId: item.id,
+          name: item.name,
+          price: item.price,
+          quantity: item.quantity,
+          img: item.img
+        })),
+        total: total,
+        itemCount: items.reduce((sum, item) => sum + item.quantity, 0)
+      };
+
+      // 🎯 Enviar el carrito al backend
+      const response = await makeAuthenticatedRequest(buildApiUrl('/checkouts'), {
+        method: 'POST',
+        body: JSON.stringify(cartData)
+      });
+
+      return response; // 🎯 Retornar la respuesta del backend
+    } catch (error) {
+      console.error('Error enviando carrito al backend:', error);
+      throw error;
+    }
+  };
+
   // 🎯 Nueva función para manejar el pago
-  const handlePayment = () => {
-    const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
-    
-    Swal.fire({
-      icon: 'success',
-      title: '¡Pago Exitoso! 🎉',
-      html: `
-        <div style="text-align: center;">
-          <p><strong>Tu pedido ha sido procesado correctamente</strong></p>
-          <p>📦 Cantidad de items: <strong>${itemCount}</strong></p>
-          <p>💰 Total pagado: <strong>$${total.toLocaleString('es-CL')}</strong></p>
-          <p>🚚 Tu pedido llegará en 30-45 minutos</p>
-          <p>¡Gracias por elegir Pizzeria Mamma Mia!</p>
-        </div>
-      `,
-      confirmButtonText: 'Continuar comprando',
-      confirmButtonColor: '#28a745',
-      timer: 5000,
-      timerProgressBar: true
-    }).then(() => {
-      // 🎯 Vaciar el carrito después del pago exitoso
-      clearCart();
-      // 🎯 Redireccionar al home
-      navigate('/');
-    });
+  const handlePayment = async () => {
+    try {
+      // 🎯 Mostrar loading mientras se procesa
+      Swal.fire({
+        title: 'Procesando pedido...',
+        text: 'Por favor espera mientras procesamos tu pedido',
+        allowOutsideClick: false,
+        didOpen: () => {
+          Swal.showLoading();
+        }
+      });
+
+      // 🎯 Enviar carrito al backend
+      const checkoutResponse = await sendCartToBackend();
+      
+      const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
+      
+      // 🎯 Mostrar mensaje de éxito
+      Swal.fire({
+        icon: 'success',
+        title: '¡Pedido Exitoso! 🎉',
+        html: `
+          <div style="text-align: center;">
+            <p><strong>Tu pedido ha sido procesado correctamente</strong></p>
+            <p>📦 Cantidad de items: <strong>${itemCount}</strong></p>
+            <p>💰 Total pagado: <strong>$${total.toLocaleString('es-CL')}</strong></p>
+            <p>🚚 Tu pedido llegará en 30-45 minutos</p>
+            <p>📋 Número de pedido: <strong>#${checkoutResponse.orderId || 'N/A'}</strong></p>
+            <p>¡Gracias por elegir Pizzeria Mamma Mia!</p>
+          </div>
+        `,
+        confirmButtonText: 'Continuar comprando',
+        confirmButtonColor: '#28a745',
+        timer: 5000,
+        timerProgressBar: true
+      }).then(() => {
+        // 🎯 Vaciar el carrito después del pago exitoso
+        clearCart();
+        // 🎯 Redirigir al home
+        navigate('/');
+      });
+    } catch (error) {
+      // 🎯 Manejar errores
+      console.error('Error en el pago:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error en el pedido',
+        text: error.message || 'Hubo un problema al procesar tu pedido. Intenta nuevamente.',
+        confirmButtonText: 'Entendido'
+      });
+    }
   };
 
   if (items.length === 0) {
@@ -139,14 +195,14 @@ const Cart = () => {
         </div>
         <button 
           className="cart-pay-btn-blue"
-          onClick={token ? handlePayment : handleLoginRedirect}
+          onClick={isAuthenticated ? handlePayment : handleLoginRedirect}
           style={{
-            opacity: !token ? 0.8 : 1,
+            opacity: !isAuthenticated ? 0.8 : 1,
             cursor: 'pointer'
           }}
-          title={!token ? 'Haz clic para iniciar sesión' : 'Procesar pago'}
+          title={!isAuthenticated ? 'Haz clic para iniciar sesión' : 'Procesar pago'}
         >
-          {!token ? '🔒 Inicia sesión para pagar' : 'Pagar'}
+          {!isAuthenticated ? '🔒 Inicia sesión para pagar' : 'Pagar'}
         </button>
       </div>
     </main>
